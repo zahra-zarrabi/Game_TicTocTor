@@ -32,22 +32,28 @@ class MainWindow(QWidget):
         for i in range(3):
             for j in range(3):
                 self.game[i][j].clicked.connect(partial(self.play,i,j))
+
     def play(self,i,j):
         if self.game[i][j].text()=="":
             if self.player==1:
                 self.game[i][j].setText('x')
                 self.game[i][j].setStyleSheet('color: blue; background-color:#CCffff')
                 self.player=2
+                if self.ui.rb_cpu.isChecked():
+                    while True:
+                        row = random.randint(0, 2)
+                        col = random.randint(0, 2)
+                        if self.game[row][col].text() == "":
+                            self.game[row][col].setText('o')
+                            self.game[row][col].setStyleSheet('color: red; background-color:#ffCCCC')
+                            self.player = 1
+                            break
 
             elif self.player == 2:
                 if self.ui.rb_player.isChecked()==True:
                     self.game[i][j].setText('o')
                     self.game[i][j].setStyleSheet('color: red; background-color:#ffCCCC')
                     self.player = 1
-                elif  self.ui.rb_cpu.isChecked():
-                    msg_box = QMessageBox()
-                    msg_box.setText('no')
-                    msg_box.exec_()
 
         self.check()
     def check(self):
@@ -57,12 +63,28 @@ class MainWindow(QWidget):
             msg_box=QMessageBox()
             msg_box.setText('بازیکن شماره1 برنده شد.')
             msg_box.exec_()
+
         elif all([self.game[i][0].text()=='x' for i in range(3)]) or all([self.game[i][1].text()=='x' for i in range(3)]) or all([self.game[i][2].text()=='x' for i in range(3)]):
             self.player1_wins+=1
             self.ui.lbl_player1.setText(str(self.player1_wins))
             msg_box=QMessageBox()
             msg_box.setText('بازیکن شماره1 برنده شد.')
             msg_box.exec_()
+
+        elif self.game[0][2].text()=="x" and self.game[1][1].text()=="x" and self.game[2][0].text()=="x":
+            self.player1_wins += 1
+            self.ui.lbl_player1.setText(str(self.player1_wins))
+            msg_box = QMessageBox()
+            msg_box.setText('بازیکن شماره1 برنده شد.')
+            msg_box.exec_()
+
+        elif self.game[0][0].text()=="x" and self.game[1][1].text()=="x" and self.game[2][2].text()=="x":
+            self.player1_wins += 1
+            self.ui.lbl_player1.setText(str(self.player1_wins))
+            msg_box = QMessageBox()
+            msg_box.setText('بازیکن شماره1 برنده شد.')
+            msg_box.exec_()
+
         elif all([self.game[0][i].text()=='o' for i in range(3)]) or all([self.game[1][i].text()=='o' for i in range(3)]) or all([self.game[2][i].text()=='o' for i in range(3)]):
             self.player2_wins+=1
             self.ui.lbl_player2.setText(str(self.player2_wins))
@@ -76,19 +98,27 @@ class MainWindow(QWidget):
             msg_box=QMessageBox()
             msg_box.setText('بازیکن شماره2 برنده شد.')
             msg_box.exec_()
-        if all([self.game[0][i].text()!='' for i in range(3)]) and all([self.game[1][i].text()!='' for i in range(3)]) and all([self.game[2][i].text()!='' for i in range(3)]):
-        # if all([[self.game[i][j].text() != '' for i in range(3)] for j in range(3)]):
-        # if '' not in [[self.game[i][j].text() for i in range(3)] for j in range(3)]:
+
+        elif self.game[0][2].text()=="o" and self.game[1][1].text()=="o" and self.game[2][0].text()=="o":
+            self.player2_wins += 1
+            self.ui.lbl_player2.setText(str(self.player2_wins))
+            msg_box = QMessageBox()
+            msg_box.setText('بازیکن شماره2 برنده شد.')
+            msg_box.exec_()
+        elif self.game[0][0].text()=="o" and self.game[1][1].text()=="o" and self.game[2][2].text()=="o":
+            self.player2_wins += 1
+            self.ui.lbl_player2.setText(str(self.player2_wins))
+            msg_box = QMessageBox()
+            msg_box.setText('بازیکن شماره2 برنده شد.')
+            msg_box.exec_()
+
+        elif all([self.game[0][i].text()!='' for i in range(3)]) and all([self.game[1][i].text()!='' for i in range(3)]) and all([self.game[2][i].text()!='' for i in range(3)]):
             print([[self.game[i][j].text() for i in range(3)] for j in range(3)])
             self.draw += 1
             self.ui.lbl_draw.setText(str(self.draw))
             msg_box = QMessageBox()
             msg_box.setText('draw')
             msg_box.exec_()
-    def tak(self):
-        row = random.randint(0, 2)
-        col = random.randint(0, 2)
-
 
 if __name__ == "__main__":
     app = QApplication([])
